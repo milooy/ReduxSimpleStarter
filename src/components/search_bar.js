@@ -20,12 +20,17 @@ class SearchBar extends Component {
 
   render() { // function이라 써주지 않았지만 함수다. normal function 대신 render function 써준것.
     return (
-      <div>
+      <div className="search-bar">
         <input
           value={this.state.term}
-          onChange={event => this.setState({ term: event.target.value })} />
+          onChange={event => this.onInputChange(event.target.value)} />
       </div>
     );
+  }
+
+  onInputChange(term) {
+    this.setState({term});
+    this.props.onSearchTermChange(term);
   }
 }
 

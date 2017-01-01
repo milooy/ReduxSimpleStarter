@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom' // 돔 만드는데 쓴다
 import SearchBar from './components/search_bar' // 라이브러리는 이름만 써도 되고, 컴포넌트는 상세 경로 써줘야 함.
 import YTSearch from 'youtube-api-search'
 import VideoList from './components/video_list'
+import VideoDetail from './components/video_detail'
 
 const API_KEY = 'AIzaSyB5xh3OSMPQmo1L8CdFXBbYO4HvDilhn1E';
 
@@ -12,10 +13,19 @@ const API_KEY = 'AIzaSyB5xh3OSMPQmo1L8CdFXBbYO4HvDilhn1E';
 class App extends Component { // const: 상수
   constructor(props) {
     super(props);
-    this.state = { videos: [] };
-    YTSearch({key: API_KEY, term: 'surfboards'}, (videos) => {
-      this.setState({ videos });
-      // this.setState({ videos: videos }) 랑 동일!
+    this.state = {
+      videos: [],
+      selectedVideo: null
+    };
+    this.videoSearch('surfboards');
+  }
+
+  videoSearch(term) {
+    YTSearch({key: API_KEY, term: term}, (videos) => {
+      this.setState({
+        videos: videos,
+        selectedVideo: videos[0]
+       });
     });
   }
 
@@ -23,8 +33,11 @@ class App extends Component { // const: 상수
     // videos라는 props 넘기기
     return (
       <div>
-        <SearchBar />
-        <VideoList videos={this.state.videos}/>
+        <SearchBar onSearchTermChange={term => this.videoSearch(term)}/>
+        <VideoDetail video={this.state.selectedVideo}/>
+        <VideoList
+          onVideoSelect={selectedVideo => this.setState({selectedVideo})}
+          videos={this.state.videos}/>
       </div> // JSX를 반환하는 js function
     );
   }
