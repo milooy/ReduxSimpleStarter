@@ -1,4 +1,5 @@
 // 자바스크립트 모듈. 모든 js 라이브러리들 캡슐화한다.
+import _ from 'lodash'
 import React, { Component } from 'react' // 리액트를 쓰고싶어요~ (node_modules 안에 있음). 리액트 컴포넌트 만드는데 쓰고
 import ReactDOM from 'react-dom' // 돔 만드는데 쓴다
 import SearchBar from './components/search_bar' // 라이브러리는 이름만 써도 되고, 컴포넌트는 상세 경로 써줘야 함.
@@ -30,10 +31,12 @@ class App extends Component { // const: 상수
   }
 
   render() {
+    const videoSearch = _.debounce((term) => {this.videoSearch(term)}, 300); // 300ms마다 호출
+
     // videos라는 props 넘기기
     return (
       <div>
-        <SearchBar onSearchTermChange={term => this.videoSearch(term)}/>
+        <SearchBar onSearchTermChange={videoSearch}/>
         <VideoDetail video={this.state.selectedVideo}/>
         <VideoList
           onVideoSelect={selectedVideo => this.setState({selectedVideo})}
