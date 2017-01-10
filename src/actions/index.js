@@ -8,9 +8,10 @@ export const FETCH_WEATHER = 'FETCH_WEATHER' // 액션 타입 담는 변수. 따
 export function fetchWeather(city) {
 	const url = `${ROOT_URL}&q=${city},us`;
 	const request = axios.get(url);
+	console.log(url, url);
 
 	return {
 		type: FETCH_WEATHER,
-		payload: request
+		payload: request // payload가 promise형태일 경우 redux promise는 action을 멈추고 promise가 resolve되면 새로운 action을 만들고 reducers로 보낸다 (promise 아닌 경우엔 바로 reducers로 감)
 	}
 }
