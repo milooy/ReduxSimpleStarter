@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import { createPost } from '../actions/index';
+import { Link } from 'react-router';
 
 // 폼이 전송되면 handleSubmit가 폼 컨텐츠와 함께 불린다. 그리고 createPost액션을 부르는데 title, ctg, cnt의 값을 담아 부른다. 그럼 createPost액션에서 props로 이들을 받아 서버로 POST한다
 
@@ -16,22 +17,48 @@ class PostNew extends Component {
     return (
       <form onSubmit={handleSubmit(this.props.createPost)}>
         <h3>새로 만들기</h3>
-        <div className='form-group'>
+        <div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
           <label>Title</label>
           <input type="text" className="form-control" {...title}/>
+          <div className="text-help">
+            {title.touched ? title.error: ''}
+          </div>
         </div>
         <div className='form-group'>
           <label>Categories</label>
           <input type="text" className="form-control" {...categories}/>
+            <div className="text-help">
+              {categories.touched ? categories.error: ''}
+            </div>
         </div>
         <div className='form-group'>
           <label>Content</label>
           <textarea className="form-control" {...content}/>
+            <div className="text-help">
+              {content.touched ? content.error: ''}
+            </div>
         </div>
         <button type="submit" className="btn btn-primary">전송</button>
+        <Link to="/" className="btn btn-danger">취소</Link>
       </form>
     );
   }
+}
+
+function validate(values) {
+  const errors = {};
+
+  if (!values.title) {
+    errors.title = 'Username 입력해줘용';
+  }
+  if (!values.categories) {
+    errors.categories = 'categories 입력해줘용';
+  }
+  if (!values.content) {
+    errors.content = 'content 입력해줘용';
+  }
+
+  return errors;
 }
 
 // connect: 첫번째인자가 mapStateToProps, 두번째 인자가 mapDispatchToProps
@@ -39,7 +66,8 @@ class PostNew extends Component {
 
 export default reduxForm({
   form: 'PostNewForm',
-  fields: ['title', 'categories', 'content']
+  fields: ['title', 'categories', 'content'],
+  validate: validate
 }, null, { createPost })(PostNew);
 
 // user가 타이핑을 하면 application state에 다음과 같이 들어간다
