@@ -21,30 +21,9 @@ class App extends Component { // const: 상수
     this.videoSearch('surfboards');
   }
 
-  videoSearch(term) {
-    YTSearch({key: API_KEY, term: term}, (videos) => {
-      this.setState({
-        videos: videos,
-        selectedVideo: videos[0]
-       });
-    });
-  }
-
-  render() {
-    const videoSearch = _.debounce((term) => {this.videoSearch(term)}, 300); // 300ms마다 호출
-
-    // videos라는 props 넘기기
-    return (
-      <div>
-        <SearchBar onSearchTermChange={videoSearch}/>
-        <VideoDetail video={this.state.selectedVideo}/>
-        <VideoList
-          onVideoSelect={selectedVideo => this.setState({selectedVideo})}
-          videos={this.state.videos}/>
-      </div> // JSX를 반환하는 js function
-    );
-  }
-};
-
-// 이 컴포넌트로 만들어진 HTML을 페이지(의 DOM)으로 넣어라
-ReactDOM.render(<App />, document.querySelector('.container')); //리액트야! 렌더해줘! 앱을! JSX태그 </>로 감싸서 클래스를 인스턴스화 하였다.
+ReactDOM.render(
+  <Provider store={createStoreWithMiddleware(reducers)}>
+    <App />
+  </Provider>
+  , document.querySelector('.container')
+);
